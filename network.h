@@ -24,6 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
+#include <vector>
+
+#include "neuron.h"
+#include "synapse.h"
+
 namespace nenet {
 
 class Actvfunc;
@@ -39,12 +46,22 @@ class Network {
     : attrs_(attributes) {buildNetwork();}
 
   const attrs& attributes() const {return attrs_;}
+  int inNeuronsCount() const {return inNodes_.size();}
+  int outNeuronsCount() const {return outNodes_.size();}
+  int hiddenNeuronsDepth() const {return hiddenNodes_.size();}
+  int hiddenNeuronsCount() const;
+  int synapsesCount() const {return synapses_.size();}
   void draw() const;
 
  private:
   attrs attrs_;
+  std::vector<Neuron> inNodes_, outNodes_;
+  std::vector<std::vector<Neuron>> hiddenNodes_;
+  std::vector<Synapse> synapses_;
 
   void buildNetwork();
+  void buildNeurons();
+  void connectNeurons();
 };
 
 }
