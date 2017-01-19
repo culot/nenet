@@ -24,22 +24,26 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "neuron.h"
+#pragma once
 
 namespace nenet {
 
+class Neuron;
+
 class Synapse {
  public:
-  Synapse(Neuron& in, Neuron& out)
-    : in_(in), out_(out) {}
+  Synapse(Neuron& in, Neuron& out);
 
   double weight() const {return weight_;}
   Synapse& setWeight(double weight) {weight_ = weight; return *this;}
   void forwardPropagate();
 
  private:
-  Neuron& in_, out_;
+  Neuron* in_;
+  Neuron* out_;
   double weight_ {0};
+
+  double computeRandomWeight() const;
 };
 
 }

@@ -24,9 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "actvfunc.h"
+#pragma once
+
+#include <vector>
 
 namespace nenet {
+
+class Actvfunc;
+class Synapse;
 
 class Neuron {
  public:
@@ -36,7 +41,7 @@ class Neuron {
     out
   };
 
-  Neuron(Type type);
+  Neuron(Type type) : type_(type) {}
 
   double value() const {return value_;}
   Type type() const {return type_;}
@@ -44,9 +49,13 @@ class Neuron {
   void resetValue() {value_ = 0;}
 
   void applyFunction(const Actvfunc& func);
+  void addInboundConnection(Synapse& synapse);
+  void addOutboundConnection(Synapse& synapse);
 
  private:
   Type   type_;
+  std::vector<Synapse*> inConn_;
+  std::vector<Synapse*> outConn_;
   double value_ {0};
 };
 

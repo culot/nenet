@@ -25,9 +25,17 @@
  */
 
 #include "network.h"
+#include "synapse.h"
 
 namespace nenet {
 
+void Neuron::addInboundConnection(Synapse& synapse) {
+  inConn_.push_back(&synapse);
+}
+
+void Neuron::addOutboundConnection(Synapse& synapse) {
+  outConn_.push_back(&synapse);
+}
 
 }
 

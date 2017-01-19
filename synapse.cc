@@ -24,12 +24,31 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <random>
+
+#include "neuron.h"
 #include "synapse.h"
 
 namespace nenet {
 
+Synapse::Synapse(Neuron& in, Neuron& out) {
+  in_ = &in;
+  out_ = &out;
+  weight_ = computeRandomWeight();
+}
+
 void Synapse::forwardPropagate() {
-  out_.addValue(in_.value() * weight_);
+  out_->addValue(in_->value() * weight_);
+}
+
+double Synapse::computeRandomWeight() const {
+  static const double lower_bound = 0;
+  static const double upper_bound = 1;
+  static std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
+  static std::random_device rand_dev;
+  static std::mt19937 rand_engine(rand_dev());
+
+  return unif(rand_engine);
 }
 
 }
