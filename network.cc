@@ -24,6 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdexcept>
+
 #include "network.h"
 
 namespace nenet {
@@ -90,5 +92,34 @@ int Network::hiddenNeuronsCount() const {
   return hiddenSize * hiddenDepth;
 }
 
+void Network::setTrainingInputData(const std::vector<double>& input) {
+  if (input.size() != inNodes_.size()) {
+    throw std::runtime_error("Training input size does not match network input size");
+  }
+  trainingInput_ = input;
 }
 
+std::vector<double> Network::inputData() const {
+  std::vector<double> inputData;
+  for (const auto& neuron : inNodes_) {
+    inputData.push_back(neuron.value());
+  }
+  return inputData;
+}
+
+void Network::setTrainingOutputData(const std::vector<double>& output) {
+  if (output.size() != outNodes_.size()) {
+    throw std::runtime_error("Training output size does not match network output size");
+  }
+  trainingOutput_ = output;
+}
+
+std::vector<double> Network::outputData() const {
+  std::vector<double> outputData;
+  for (const auto& neuron : outNodes_) {
+    outputData.push_back(neuron.value());
+  }
+  return outputData;
+}
+
+}

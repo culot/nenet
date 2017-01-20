@@ -51,6 +51,12 @@ class Network {
   int hiddenNeuronsDepth() const {return hiddenNodes_.size();}
   int hiddenNeuronsCount() const;
   int synapsesCount() const {return synapses_.size();}
+
+  void setTrainingInputData(const std::vector<double>& input);
+  std::vector<double> inputData() const;
+  void setTrainingOutputData(const std::vector<double>& output);
+  std::vector<double> outputData() const;
+
   void draw() const;
 
  private:
@@ -58,6 +64,8 @@ class Network {
   std::vector<Neuron> inNodes_, outNodes_;
   std::vector<std::vector<Neuron>> hiddenNodes_;
   std::vector<Synapse> synapses_;
+  std::vector<double> trainingInput_;
+  std::vector<double> trainingOutput_;
 
   void buildNetwork();
   void buildNeurons();
