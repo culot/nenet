@@ -13,7 +13,7 @@ CC?=		cc
 CFLAGS+=	-g -Wall
 CXXFLAGS+=	-g -Wall -std=c++11
 CPPFLAGS+=	-I..
-LDADD=		-lstdc++
+LDADD=		-lstdc++ -lm
 
 all:		${PROG}
 

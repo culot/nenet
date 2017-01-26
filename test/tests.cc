@@ -25,6 +25,7 @@
  */
 
 #include <cassert>
+#include <cmath>
 #include <iostream>
 
 #include "softsign.h"
@@ -89,10 +90,39 @@ void test_topology_large() {
   std::cout << "OK" << std::endl;
 }
 
+void test_fprop_softsign() {
+  std::cout << "Testing forward propagation with softsign function ... ";
+
+  Softsign softsign;
+  Network::attrs netAttrs;
+  netAttrs.actvFunc = &softsign;
+  netAttrs.inputSize = 2;
+  netAttrs.outputSize = 1;
+  netAttrs.hiddenSize = 3;
+  netAttrs.hiddenDepth = 2;
+  Network net(netAttrs);
+
+  net.setFixedWeights(double(.5));
+  std::vector<double> input {double(-.5), double(.8)};
+  net.setTrainingInputData(input);
+  std::vector<double> output {double(.5)};
+  net.setTrainingOutputData(output);
+  net.train();
+
+  std::vector<double> result = net.outputData();
+  std::vector<double> expected {double(.19718)};
+
+  assert(result.size() == 1);
+  assert(std::trunc(result[0] * 100000) == 19708);
+
+  std::cout << "OK" << std::endl;
+}
+
 int main(int argc, char** argv) {
   test_topology_minimal();
   test_topology_small();
   test_topology_large();
+  test_fprop_softsign();
 
   return 0;
 }
