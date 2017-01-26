@@ -31,14 +31,13 @@
 
 namespace nenet {
 
-Synapse::Synapse(Neuron& in, Neuron& out) {
-  in_ = &in;
-  out_ = &out;
+Synapse::Synapse(std::shared_ptr<Neuron> in, std::shared_ptr<Neuron> out)
+  : in_(in), out_(out) {
   weight_ = computeRandomWeight();
 }
 
-void Synapse::forwardPropagate() {
-  out_->addValue(in_->value() * weight_);
+double Synapse::getWeightedInputValue() const {
+  return in_->value() * weight_;
 }
 
 double Synapse::computeRandomWeight() const {

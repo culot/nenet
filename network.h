@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "neuron.h"
@@ -56,20 +57,23 @@ class Network {
   std::vector<double> inputData() const;
   void setTrainingOutputData(const std::vector<double>& output);
   std::vector<double> outputData() const;
+  void train();
+  void dump() const;
 
-  void draw() const;
+  // For testing purposes only
+  void setFixedWeights(double weight);
 
  private:
   attrs attrs_;
-  std::vector<Neuron> inNodes_, outNodes_;
-  std::vector<std::vector<Neuron>> hiddenNodes_;
-  std::vector<Synapse> synapses_;
-  std::vector<double> trainingInput_;
-  std::vector<double> trainingOutput_;
+  std::vector<std::shared_ptr<Neuron>> inNodes_, outNodes_;
+  std::vector<std::vector<std::shared_ptr<Neuron>>> hiddenNodes_;
+  std::vector<std::shared_ptr<Synapse>> synapses_;
+  std::vector<double> expectedOutput_;
 
   void buildNetwork();
   void buildNeurons();
   void connectNeurons();
+  void forwardPropagate();
 };
 
 }

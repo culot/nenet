@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 namespace nenet {
@@ -48,15 +49,18 @@ class Neuron {
   Neuron& addValue(double value) {value_ += value; return *this;}
   void resetValue() {value_ = 0;}
 
-  void applyFunction(const Actvfunc& func);
-  void addInboundConnection(Synapse& synapse);
-  void addOutboundConnection(Synapse& synapse);
+  void computeSum();
+  void applyActivationFunction(const Actvfunc& func);
+  void addInboundConnection(std::shared_ptr<Synapse> synapse);
+  void addOutboundConnection(std::shared_ptr<Synapse> synapse);
+
+  void dump() const;
 
  private:
   Type   type_;
-  std::vector<Synapse*> inConn_;
-  std::vector<Synapse*> outConn_;
-  double value_ {0};
+  std::vector<std::shared_ptr<Synapse>> inConn_;
+  std::vector<std::shared_ptr<Synapse>> outConn_;
+  double value_ {};
 };
 
 }

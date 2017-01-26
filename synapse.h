@@ -26,22 +26,23 @@
 
 #pragma once
 
+#include <memory>
+
 namespace nenet {
 
 class Neuron;
 
 class Synapse {
  public:
-  Synapse(Neuron& in, Neuron& out);
+  Synapse(std::shared_ptr<Neuron> in, std::shared_ptr<Neuron> out);
 
   double weight() const {return weight_;}
   Synapse& setWeight(double weight) {weight_ = weight; return *this;}
-  void forwardPropagate();
+  double getWeightedInputValue() const;
 
  private:
-  Neuron* in_;
-  Neuron* out_;
-  double weight_ {0};
+  std::shared_ptr<Neuron> in_, out_;
+  double weight_ {};
 
   double computeRandomWeight() const;
 };

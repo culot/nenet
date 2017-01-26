@@ -24,17 +24,45 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <iostream>
+
+#include "actvfunc.h"
 #include "network.h"
 #include "synapse.h"
 
 namespace nenet {
 
-void Neuron::addInboundConnection(Synapse& synapse) {
-  inConn_.push_back(&synapse);
+  void Neuron::addInboundConnection(std::shared_ptr<Synapse> synapse) {
+  inConn_.push_back(synapse);
 }
 
-void Neuron::addOutboundConnection(Synapse& synapse) {
-  outConn_.push_back(&synapse);
+  void Neuron::addOutboundConnection(std::shared_ptr<Synapse> synapse) {
+  outConn_.push_back(synapse);
+}
+
+void Neuron::computeSum() {
+  value_ = 0;
+  for (const auto synapse : inConn_) {
+    value_ += synapse->getWeightedInputValue();
+
+  }
+}
+
+void Neuron::applyActivationFunction(const Actvfunc& func) {
+  value_ = func.compute(value_);
+}
+
+
+void Neuron::dump() const {
+  std::cout << "Neuron [" << this << "]" << std::endl;
+  std::cout << "    Number of input conns [" << inConn_.size() << "]" << std::endl;
+  for (auto& synapse : inConn_) {
+    std::cout << "    synapse [" << synapse << "]" << std::endl;
+  }
+  std::cout << "    Number of output conns [" << outConn_.size() << "]" << std::endl;
+  for (auto& synapse : outConn_) {
+    std::cout << "    synapse [" << synapse << "]" << std::endl;
+  }
 }
 
 }
