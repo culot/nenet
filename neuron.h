@@ -54,8 +54,6 @@ class Neuron {
   void addInboundConnection(std::shared_ptr<Synapse> synapse);
   void addOutboundConnection(std::shared_ptr<Synapse> synapse);
 
-  void dump() const;
-
  private:
   Type   type_;
   std::vector<std::shared_ptr<Synapse>> inConn_;
