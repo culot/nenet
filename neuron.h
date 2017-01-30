@@ -43,8 +43,10 @@ class Neuron {
   };
 
   Neuron(Type type) : type_(type) {}
+  Neuron(int id, Type type) : id_(id), type_(type) {}
 
   double value() const {return value_;}
+  int id() const {return id_;}
   Type type() const {return type_;}
   Neuron& addValue(double value) {value_ += value; return *this;}
   void resetValue() {value_ = 0;}
@@ -55,6 +57,7 @@ class Neuron {
   void addOutboundConnection(std::shared_ptr<Synapse> synapse);
 
  private:
+  int    id_ {0};
   Type   type_;
   std::vector<std::shared_ptr<Synapse>> inConn_;
   std::vector<std::shared_ptr<Synapse>> outConn_;
