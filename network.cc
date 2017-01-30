@@ -26,30 +26,54 @@
 
 #include <stdexcept>
 
+#include "gfx.h"
 #include "network.h"
 
 namespace nenet {
 
-  /* XXX Draw the network in Gfx class
 void Network::dump() const {
-  std::cout << std::endl << "********* DUMP ************" << std::endl;
+  static const int gap = 3;
+  int ymin = gap * attrs_.hiddenSize + 1;
+
   for (int i = 0; i < attrs_.inputSize; ++i) {
     auto neuron = inNodes_[i];
-    neuron->dump();
+    gfx::Gfx::instance().print(ACS_DIAMOND, {1 + i * gap, 0});
+    gfx::Gfx::instance().print(std::to_string(neuron->id()), {2 + i * gap, 0});
+    gfx::Gfx::instance().print(std::to_string(neuron->id())
+                               + ": "
+                               + std::to_string(neuron->value()),
+                               {ymin++, 0});
   }
   for (int depth = 0; depth < attrs_.hiddenDepth; ++depth) {
     for (int i = 0; i < attrs_.hiddenSize; ++i) {
       auto neuron = hiddenNodes_[depth][i];
-      neuron->dump();
+      gfx::Gfx::instance().print(ACS_DIAMOND, {1 + gap * i, gap + depth * gap});
+      gfx::Gfx::instance().print(std::to_string(neuron->id()), {2 + i * gap, gap + depth * gap});
+      gfx::Gfx::instance().print(std::to_string(neuron->id())
+                                 + ": "
+                                 + std::to_string(neuron->value()),
+                                 {ymin++, 0});
     }
   }
   for (int i = 0; i < attrs_.outputSize; ++i) {
     auto neuron = outNodes_[i];
-    neuron->dump();
+    gfx::Gfx::instance().print(ACS_DIAMOND, {1 + gap * i, gap + attrs_.hiddenDepth * gap});
+    gfx::Gfx::instance().print(std::to_string(neuron->id()), {2 + i * gap, gap + attrs_.hiddenDepth * gap});
+    gfx::Gfx::instance().print(std::to_string(neuron->id())
+                               + ": "
+                               + std::to_string(neuron->value()),
+                               {ymin++, 0});
   }
-  std::cout << "********* DUMP ************" << std::endl;
+
+  for (const auto& synapse : synapses_) {
+    gfx::Gfx::instance().print(std::to_string(synapse->inNeuron()->id())
+                               + " -- "
+                               + std::to_string(synapse->weight())
+                               + " -> "
+                               + std::to_string(synapse->outNeuron()->id()),
+                               {++ymin, 0});
+  }
 }
-  */
 
 void Network::buildNetwork() {
   buildNeurons();
@@ -57,17 +81,18 @@ void Network::buildNetwork() {
 }
 
 void Network::buildNeurons() {
+  int neuronNum = 0;
   for (int i = 0; i < attrs_.inputSize; ++i) {
-    inNodes_.push_back(std::make_shared<Neuron>(Neuron::Type::in));
-  }
-  for (int i = 0; i < attrs_.outputSize; ++i) {
-    outNodes_.push_back(std::make_shared<Neuron>(Neuron::Type::out));
+    inNodes_.push_back(std::make_shared<Neuron>(neuronNum++, Neuron::Type::in));
   }
   hiddenNodes_.resize(attrs_.hiddenDepth);
   for (int depth = 0; depth < attrs_.hiddenDepth; ++depth) {
     for (int i = 0; i < attrs_.hiddenSize; ++i) {
-      hiddenNodes_[depth].push_back(std::make_shared<Neuron>(Neuron::Type::hidden));
+      hiddenNodes_[depth].push_back(std::make_shared<Neuron>(neuronNum++, Neuron::Type::hidden));
     }
+  }
+  for (int i = 0; i < attrs_.outputSize; ++i) {
+    outNodes_.push_back(std::make_shared<Neuron>(neuronNum++, Neuron::Type::out));
   }
 }
 
