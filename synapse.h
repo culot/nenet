@@ -40,6 +40,9 @@ class Synapse {
   Synapse& setWeight(double weight) {weight_ = weight; return *this;}
   double getWeightedInputValue() const;
 
+  const std::shared_ptr<Neuron> inNeuron() const {return in_;}
+  const std::shared_ptr<Neuron> outNeuron() const {return out_;}
+
  private:
   std::shared_ptr<Neuron> in_, out_;
   double weight_ {};
