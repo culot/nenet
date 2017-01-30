@@ -65,14 +65,32 @@ void Gfx::init() {
 // update the display at the same time. This creates a single point of
 // entry that prevents this case from happening.
 void Gfx::update() {
-  mutex_.lock();
-  doupdate();
-  mutex_.unlock();
+  refresh();
 }
 
 void Gfx::terminate() {
   clear();
   endwin();
+}
+
+void Gfx::print(int c, const Point& pos, const Style& style) {
+  attron(COLOR_PAIR(style.color));
+  if (!pos.isNull()) {
+    move(pos.y(), pos.x());
+  }
+  addch(c);
+  attroff(COLOR_PAIR(style.color));
+  update();
+}
+
+void Gfx::print(const std::string& str, const Point& pos, const Style& style) {
+  attron(COLOR_PAIR(style.color));
+  if (!pos.isNull()) {
+    move(pos.y(), pos.x());
+  }
+  addstr(str.c_str());
+  attroff(COLOR_PAIR(style.color));
+  update();
 }
 
 }

@@ -26,65 +26,23 @@
 
 #pragma once
 
-#include <mutex>
+#include <string>
 #include <curses.h>
 
 namespace nenet {
 namespace gfx {
 
 struct Point {
-public:
-  enum class Label {
-    topLeft,
-    topRight,
-    bottomLeft,
-    bottomRight,
-    center
-  };
-
-  Point() {}
-  Point(Label label) {
-    switch (label) {
-    case Label::topLeft:
-      x_ = 0;
-      y_ = 0;
-      break;
-    case Label::topRight:
-      x_ = COLS;
-      y_ = 0;
-      break;
-    case Label::bottomLeft:
-      x_ = 0;
-      y_ = LINES;
-      break;
-    case Label::bottomRight:
-      x_ = COLS;
-      y_ = LINES;
-      break;
-    case Label::center:
-      x_ = COLS / 2;
-      y_ = LINES / 2;
-      break;
-    }
-  }
-
-  void setX(int x) {x_ = x;}
-  void setY(int y) {y_ = y;}
-  void reset() {x_ = 0; y_ = 0;}
-  bool isNull() const {return x_ == 0 && y_ == 0;}
+ public:
+  Point(int y, int x) : y_(y), x_(x) {}
   int  x() const {return x_;}
   int  y() const {return y_;}
-
-  bool operator==(const Point& other) const {
-    return y() == other.y() && x() == other.x();
-  }
-  bool operator!=(const Point& other) const {return !(*this == other);}
+  bool isNull() const {return y_ == 0 && x_ == 0;}
 
 private:
-  int x_ {0};
   int y_ {0};
+  int x_ {0};
 };
-
 
 struct Size {
 public:
@@ -147,18 +105,18 @@ struct Style {
 class Gfx {
  public:
   static Gfx&  instance() {static Gfx instance_; return instance_;}
-
-  void         init();
   void         update();
-  void         terminate();
+  void         print(int c, const Point& pos, const Style& style = {});
+  void         print(const std::string& str, const Point& pos, const Style& style = {});
 
  private:
-  std::mutex  mutex_;
-
-  Gfx() {}
-  ~Gfx() {}
+  Gfx() {init();}
+  ~Gfx() {terminate();}
   Gfx(const Gfx&) = delete;
   void operator=(const Gfx&) = delete;
+
+  void         init();
+  void         terminate();
 };
 
 }
