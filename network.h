@@ -51,6 +51,9 @@ class Network {
   int outNeuronsCount() const {return outNodes_.size();}
   int hiddenNeuronsDepth() const {return hiddenNodes_.size();}
   int hiddenNeuronsCount() const;
+  int neuronsCount() const {
+    return inNeuronsCount() + outNeuronsCount() + hiddenNeuronsCount();
+  }
   int synapsesCount() const {return synapses_.size();}
 
   void setTrainingInputData(const std::vector<double>& input);
